@@ -26,9 +26,21 @@ You will have to authenticate the device from the network interface. Additionall
 
 ![device config](device_config.png)
 
-Note: To be able to ssh into the pi you will need to remove the `ListenAddress` lines at the bottom of `/etc/ssh/sshd_config` which will enable people to ssh from WiFi. This is a security issue so either change the password (and document it somewhere) or setup key based login.
+Note: To be able to ssh into the pi you will need to remove the `ListenAddress` lines at the bottom of `/etc/ssh/sshd_config` which will enable people to ssh from WiFi. This is a security issue so either change the password (and document it somewhere) or setup key based login. The most recent time I got this working I didn't assign an IP via the zerotier interface - just the bridge interface on the pi
 
 Note: It is quite possible to get locked out during this process so have a SD card reader and/or UART adapter ready to ger access to the pi
+
+### Debugging
+
+On newer versions of Raspbian the network boot order is changed so the interface doesn't get added to the bridge. As a workarround add 
+
+```
+printf "Restarting bridge interface..."
+ifdown br0
+sleep 2
+ifup br0
+```
+to your `/etc/rc.local`. From [here](https://www.reddit.com/r/zerotier/comments/d1tsv9/rasperian_buster_seems_to_changed_network_boot/)
 
 
 #### Install on Mac
